@@ -1,3 +1,5 @@
+import Contato.Contact;
+
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -6,11 +8,21 @@ public class Main {
     public static void main(String[] args) {
         boolean exitMenu = false;
         Scanner scanner = new Scanner(System.in);
+        Contact contact = new Contact();
 
         while (!exitMenu){
             menuUI();
             String result = scanner.nextLine();
             switch (result){
+                case "1":
+                    contact.listContact();
+                    break;
+                case "2":
+                    contact.addContact();
+                    break;
+                case "3":
+                    contact.removeContact();
+                    break;
                 case "4":
                     System.out.println("Saindo da aplicação...");
                     exitMenu = true;
