@@ -1,21 +1,30 @@
 package Phone;
 
+import Contact.Contact;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Phone {
+
+    private static Long lastId = 0L;  // Rastreia o último ID atribuído
+
     private Long id;
     private String ddd;
     private Long numero;
 
-    public Long getId() {
-        return id;
+    public Phone() {
+        this.id = generateId();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    private static synchronized Long generateId() {
+        return ++lastId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getDdd() {
@@ -34,7 +43,7 @@ public class Phone {
         this.numero = numero;
     }
 
-    public static List<Phone> readPhonesFromUser() {
+    public static List<Phone> readPhonesFromUser(List<Contact> contacts) {
         Scanner scanner = new Scanner(System.in);
         List<Phone> phones = new ArrayList<>();
 
@@ -50,15 +59,26 @@ public class Phone {
 
                 System.out.println("Digite o número do telefone " + (i + 1) + ":");
                 phone.setNumero(scanner.nextLong());
+                boolean equals = false;
+                for (Contact contact : contacts) {
+                    List<Phone> phonesVerify = contact.getPhones();
+                    for (Phone contactPhone : phonesVerify)
+                        if (contactPhone.getNumero().equals(phone.getNumero())) {
+                            equals = true;
+                            break;
+                        }
+                }
 
-                phones.add(phone);
+                if (!equals){
+                    phones.add(phone);
+                }
+
             }
         } catch (InputMismatchException e) {
             System.out.println("Erro: Forneça valores válidos para o número e DDD do telefone.");
-            scanner.nextLine(); // Limpar o buffer do scanner após erro de entrada
+            scanner.nextLine();
         }
 
         return phones;
     }
-
 }

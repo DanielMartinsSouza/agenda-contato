@@ -1,32 +1,30 @@
-import Contato.Contact;
-
 import java.util.Scanner;
+import static Contact.Contact.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         boolean exitMenu = false;
         Scanner scanner = new Scanner(System.in);
-        Contact contact = new Contact();
 
         while (!exitMenu){
             menuUI();
             String result = scanner.nextLine();
             switch (result){
                 case "1":
-                    contact.listContact();
+                    listContact();
                     break;
                 case "2":
-                    contact.addContact();
+                    addContact();
                     break;
                 case "3":
-                    contact.removeContact();
+                    removeContact();
                     break;
                 case "4":
+                    editContact();
+                    break;
+                case "5":
                     System.out.println("Saindo da aplicação...");
                     exitMenu = true;
-                    break;
                 default:
                     System.out.println("Você digitou um valor diferente das opções");
             }
@@ -45,8 +43,8 @@ public class Main {
                     1 - Listar Contatos.
                     2 - Adicionar Contatos.
                     3 - Apagar Contato.
-                    4 - Sair da aplicação.
-                    
+                    4 - Editar Contato.
+                    5 - Sair da Aplicação
                     """
         );
     }

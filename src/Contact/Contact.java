@@ -1,16 +1,27 @@
-package Contato;
+package Contact;
 
+import File.MyFile;
 import Phone.Phone;
-import Service.ServiceFile;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Contact {
+
+    private static Long lastId = 0L;
+
     private Long id;
     private String nome;
     private String sobreNome;
     private List<Phone> phones;
+
+    public Contact() {
+        this.id = generateId();
+    }
+
+    public static synchronized Long generateId() {
+        return ++lastId;
+    }
 
     public Long getId() {
         return id;
@@ -44,9 +55,9 @@ public class Contact {
         this.phones = phones;
     }
 
-    public static List<Contact> contacts = ServiceFile.readContactsFromFile("/home/daniel/Documentos/AdaTech/agenda-contato/src/DataBase/db.txt");
+    public static List<Contact> contacts = MyFile.readFile();
 
-    public void listContact() {
+    public static void listContact() {
         System.out.println("-- Listando Contatos: --");
         for (Contact contact : contacts) {
             System.out.println("ID: " + contact.getId());
@@ -62,18 +73,15 @@ public class Contact {
         }
     }
 
-    public void addContact() {
+    public static void addContact() {
 
         Scanner scanner = new Scanner(System.in);
         Contact newContact = new Contact();
-
-        System.out.println("Digite o ID do novo contato:");
-        newContact.setId(scanner.nextLong());
-
         boolean idEquals = false;
         for (Contact contact : contacts) {
             if (contact.getId().equals(newContact.getId())) {
                 idEquals = true;
+                break;
             }
         }
         if (!idEquals) {
@@ -84,30 +92,36 @@ public class Contact {
             newContact.setSobreNome(scanner.next());
 
             // Adicionando telefones ao novo contato
-            List<Phone> phones = Phone.readPhonesFromUser();
+            List<Phone> phones = Phone.readPhonesFromUser(contacts);
             newContact.setPhones(phones);
 
-            // Adicionando o novo contato à lista de contatos
-            contacts.add(newContact);
+            if (!phones.isEmpty()) {
+                // Adicionando o novo contato à lista de contatos
+                contacts.add(newContact);
 
-            System.out.println("Novo contato adicionado com sucesso!");
-            ServiceFile.saveContactsToFile(contacts, "/home/daniel/Documentos/AdaTech/agenda-contato/src/DataBase/db.txt"); // Salva a lista atualizada no arquivo
+                System.out.println("Novo contato adicionado com sucesso!");
+                MyFile.writeFile(newContact);// Salva a lista atualizada no arquivo
 
-        }else {
-            System.out.println("Você inseriu um id já existente");
+            } else {
+                System.out.println("ERRO: Telefone(s) cadastrado(s), impossivel salvar o contato");
+            }
+
+
+        } else {
+            System.out.println("ERRO: Você inseriu um id já existente");
         }
 
 
     }
 
-    public void removeContact() {
+    public static void removeContact() {
+        listContact();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o ID do contato que deseja remover:");
         Long contactIdToRemove = scanner.nextLong();
 
         Contact contactToRemove = null;
 
-        // Procurando o contato na lista
         for (Contact contact : contacts) {
             if (contact.getId().equals(contactIdToRemove)) {
                 contactToRemove = contact;
@@ -115,13 +129,54 @@ public class Contact {
             }
         }
 
-        // Removendo o contato se encontrado
         if (contactToRemove != null) {
             contacts.remove(contactToRemove);
             System.out.println("Contato removido com sucesso!");
-            ServiceFile.saveContactsToFile(contacts, "/home/daniel/Documentos/AdaTech/agenda-contato/src/DataBase/db.txt"); // Salva a lista atualizada no arquivo
+            MyFile.rewritingFile(contacts);
         } else {
             System.out.println("Contato não encontrado com o ID informado.");
+        }
+    }
+
+    public static void editContact() {
+        listContact();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o ID do contato que deseja alterar:");
+        Long contactIdToEdit = scanner.nextLong();
+
+        Contact contactToEdit = null;
+
+        boolean idExist = false;
+
+        for (Contact contact : contacts) {
+            if (contact.getId().equals(contactIdToEdit)) {
+                idExist = true;
+                contactToEdit = contact;
+
+                System.out.println("Digite o Nome do novo contato:");
+                contactToEdit.setNome(scanner.next());
+
+                System.out.println("Digite o Sobrenome do novo contato:");
+                contactToEdit.setSobreNome(scanner.next());
+
+
+                List<Phone> phonesVerify = contact.getPhones();
+                for (Phone contactPhone : phonesVerify) {
+                    System.out.println("Alterando telefone " + contactPhone.getId().toString());
+                    System.out.println("Digite o DDD do telefone" + ":");
+                    contactPhone.setDdd(scanner.next());
+
+                    System.out.println("Digite o número do telefone" + ":");
+                    contactPhone.setNumero(scanner.nextLong());
+                }
+
+                MyFile.rewritingFile(contacts);
+            }
+        }
+
+        if (!idExist){
+            System.out.println("ERRO: ID não encontrado");
         }
     }
 }
