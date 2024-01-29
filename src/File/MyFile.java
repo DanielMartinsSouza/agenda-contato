@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MyFile {
 
-    private static final String FILE_PATH = "D:\\AdaTech\\agenda-contato\\contatos.txt";
+    private static final String FILE_PATH = "/home/daniel/Documentos/AdaTech/agenda-contato/contatos.txt";
 
     private static File createFile() {
         File file = new File(FILE_PATH);

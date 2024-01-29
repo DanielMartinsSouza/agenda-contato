@@ -59,18 +59,13 @@ public class Phone {
 
                 System.out.println("Digite o número do telefone " + (i + 1) + ":");
                 phone.setNumero(scanner.nextLong());
-                boolean equals = false;
-                for (Contact contact : contacts) {
-                    List<Phone> phonesVerify = contact.getPhones();
-                    for (Phone contactPhone : phonesVerify)
-                        if (contactPhone.getNumero().equals(phone.getNumero())) {
-                            equals = true;
-                            break;
-                        }
-                }
+                boolean phoneEquals = false;
+                phoneEquals = isPhoneEquals(contacts, phone, phoneEquals);
 
-                if (!equals){
+                if (!phoneEquals){
                     phones.add(phone);
+                }else {
+                    phones.clear();
                 }
 
             }
@@ -80,5 +75,17 @@ public class Phone {
         }
 
         return phones;
+    }
+
+    public static boolean isPhoneEquals(List<Contact> contacts, Phone phone, boolean phoneEquals) {
+        for (Contact contact : contacts) {
+            List<Phone> phonesVerify = contact.getPhones();
+            for (Phone contactPhone : phonesVerify)
+                if (contactPhone.getNumero().equals(phone.getNumero()) && contactPhone.getDdd().equals(phone.getDdd())) {
+                    phoneEquals = true;
+                    break;
+                }
+        }
+        return phoneEquals;
     }
 }

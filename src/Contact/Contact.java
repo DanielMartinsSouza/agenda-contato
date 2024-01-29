@@ -74,15 +74,14 @@ public class Contact {
     }
 
     public static void listContact() {
-        System.out.println("-- Listando Contatos com todas informações: --");
         System.out.print("""
-                    ##############################
-                    ##### AGENDA DE CONTATOS #####
-                    ##############################
-                    
-                    >>>>>>>>>> Contatos <<<<<<<<<<
-                    Id | Nome
-                    """);
+                ##############################
+                ##### AGENDA DE CONTATOS #####
+                ##############################
+                                    
+                >>>>>>>>>> Contatos <<<<<<<<<<
+                Id | Nome
+                """);
         for (Contact contact : contacts) {
 
             System.out.printf("""
@@ -133,7 +132,7 @@ public class Contact {
     }
 
     public static void removeContact() {
-        listContact();
+        completeListContact();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o ID do contato que deseja remover:");
         Long contactIdToRemove = scanner.nextLong();
@@ -157,13 +156,13 @@ public class Contact {
     }
 
     public static void editContact() {
-        listContact();
+        completeListContact();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o ID do contato que deseja alterar:");
         Long contactIdToEdit = scanner.nextLong();
 
-        Contact contactToEdit = null;
+        Contact contactToEdit;
 
         boolean idExist = false;
 
@@ -178,22 +177,32 @@ public class Contact {
                 System.out.println("Digite o Sobrenome do novo contato:");
                 contactToEdit.setSobreNome(scanner.next());
 
-
+                boolean phoneEquals = false;
                 List<Phone> phonesVerify = contact.getPhones();
                 for (Phone contactPhone : phonesVerify) {
                     System.out.println("Alterando telefone " + contactPhone.getId().toString());
                     System.out.println("Digite o DDD do telefone" + ":");
-                    contactPhone.setDdd(scanner.next());
+                    String phoneDDD = scanner.next();
 
                     System.out.println("Digite o número do telefone" + ":");
-                    contactPhone.setNumero(scanner.nextLong());
+                    Long phoneNumber = scanner.nextLong();
+
+                    phoneEquals = Phone.isPhoneEquals(contacts, contactPhone, phoneEquals);
+
+                    if (!phoneEquals){
+                        contactPhone.setDdd(phoneDDD);
+                        contactPhone.setNumero(phoneNumber);
+                    }else {
+                        System.out.println("Você digitou um telefone já cadastrado");
+                    }
+
                 }
 
                 MyFile.rewritingFile(contacts);
             }
         }
 
-        if (!idExist){
+        if (!idExist) {
             System.out.println("ERRO: ID não encontrado");
         }
     }
