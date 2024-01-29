@@ -2,7 +2,7 @@ import java.util.Scanner;
 import static Contact.Contact.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         boolean exitMenu = false;
         Scanner scanner = new Scanner(System.in);
 
@@ -25,9 +25,11 @@ public class Main {
                 case "5":
                     System.out.println("Saindo da aplicação...");
                     exitMenu = true;
+                    break;
                 default:
                     System.out.println("Você digitou um valor diferente das opções");
             }
+            Thread.sleep(2000);
         }
 
     }
