@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 import static Contact.Contact.*;
 
 public class Main {
@@ -6,21 +7,22 @@ public class Main {
         boolean exitMenu = false;
         Scanner scanner = new Scanner(System.in);
 
-        while (!exitMenu){
+        while (!exitMenu) {
+            listContact();
             menuUI();
             String result = scanner.nextLine();
-            switch (result){
+            switch (result) {
                 case "1":
-                    listContact();
-                    break;
-                case "2":
                     addContact();
                     break;
-                case "3":
+                case "2":
                     removeContact();
                     break;
-                case "4":
+                case "3":
                     editContact();
+                    break;
+                case "4":
+                    completeListContact();
                     break;
                 case "5":
                     System.out.println("Saindo da aplicação...");
@@ -34,20 +36,17 @@ public class Main {
 
     }
 
-    public static void menuUI(){
+    public static void menuUI() {
         System.out.println("""
-                    
-                    ##############################
-                    ##### AGENDA DE CONTATOS #####
-                    ##############################
-                    
-                    Escolha uma das opções abaixo:
-                    1 - Listar Contatos.
-                    2 - Adicionar Contatos.
-                    3 - Apagar Contato.
-                    4 - Editar Contato.
-                    5 - Sair da Aplicação
-                    """
+                                    
+                >>>>>>>>>>>> Menu <<<<<<<<<<<<                    
+                Escolha uma das opções abaixo:
+                1 - Adicionar Contatos.
+                2 - Apagar Contato.
+                3 - Editar Contato.
+                4 - Listar Todas Informações dos Contatos.
+                5 - Sair da Aplicação
+                """
         );
     }
 }

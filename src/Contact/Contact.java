@@ -57,8 +57,8 @@ public class Contact {
 
     public static List<Contact> contacts = MyFile.readFile();
 
-    public static void listContact() {
-        System.out.println("-- Listando Contatos: --");
+    public static void completeListContact() {
+        System.out.println("-- Listando Contatos com todas informações: --");
         for (Contact contact : contacts) {
             System.out.println("ID: " + contact.getId());
             System.out.println("Nome: " + contact.getNome());
@@ -70,6 +70,24 @@ public class Contact {
             }
 
             System.out.println("-------------------------");
+        }
+    }
+
+    public static void listContact() {
+        System.out.println("-- Listando Contatos com todas informações: --");
+        System.out.print("""
+                    ##############################
+                    ##### AGENDA DE CONTATOS #####
+                    ##############################
+                    
+                    >>>>>>>>>> Contatos <<<<<<<<<<
+                    Id | Nome
+                    """);
+        for (Contact contact : contacts) {
+
+            System.out.printf("""
+                    %d | %s %s
+                    """, contact.getId(), contact.getNome(), contact.getSobreNome());
         }
     }
 
